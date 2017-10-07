@@ -1,0 +1,14 @@
+% Determine where your m-file's folder is.
+folder = fileparts(which(mfilename)); 
+% Add that folder plus all subfolders to the path.
+addpath(genpath(folder));
+
+% Generate the struct containing the movie data
+movies.action.filename = {'Kingsman_2017.jpg','',''};
+movies.action.title = {'Kingsman: The Golden Circle','Baby Driver','Spider-Man: Homecoming'};
+movies.action.year = [2017,2017,2017];
+movies.action.actors = {'Arnold'};
+movies.action.facespresent = [0, 0, 1];
+
+im = imread(movies.action.filename{1});
+imshow(im);
