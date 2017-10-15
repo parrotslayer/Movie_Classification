@@ -1,0 +1,26 @@
+% Get Data
+
+ind = 1;
+path_00 = zeros(600,1);
+for i = 1:length(wiki.full_path)
+    path = wiki.full_path{i};
+    sub_folder = path(1:2);
+    if strcmp('00',sub_folder)
+        % store index of the image from 00 folder
+        path_00(ind) = i;
+        ind = ind + 1;
+    end
+end
+
+for i = 1:length(path_00)
+    index = path_00(i);
+    orig_img=imread(wiki.full_path{index});
+    cropped_face{i}=extractSubImage(orig_img,wiki.face_location{index});
+    
+end
+%%
+index = path_00{2};
+figure
+imshow(wiki.full_path{index})
+figure
+imshow(uint8(index))
