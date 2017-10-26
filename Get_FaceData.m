@@ -28,6 +28,12 @@ for i = 1:length(path_images)
     orig_img=imread(wiki.full_path{index});
     cropped_face{i}=extractSubImage(orig_img,wiki.face_location{index});
     cropped_face_resized{i} = imresize(uint8(cropped_face{i}),[256 256]);
+    
+%     % save the cropped image as a numbered thing
+%     str=strcat(int2str(i),'.jpg');
+%     % image to write
+%     img = cropped_face_resized{i};
+%     eval('imwrite(img,str)');   
 end
 
 save('path_0_2.mat','path_images');
