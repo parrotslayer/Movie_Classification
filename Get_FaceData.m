@@ -10,36 +10,25 @@ ind = 1;
 for i = 1:length(wiki.full_path)
     path = wiki.full_path{i};
     sub_folder = path(1:2);
-    % check is from folder 00, only 1 face and there is a face
-    if strcmp('00',sub_folder) && isnan(wiki.second_face_score(i))...
-            && wiki.face_score(i) > 0 && not(isnan(wiki.gender(i)))
+    % check is from the existing folders
+    if strcmp('00',sub_folder)||strcmp('01',sub_folder)||strcmp('02',sub_folder) 
+        % Check if there is only one face and gender can be classified
+        if isnan(wiki.second_face_score(i)) && wiki.face_score(i) > 0 ...
+                && not(isnan(wiki.gender(i)))
         % store index of the image from 00 folder
-        path_00(ind) = i;
+        path_images(ind) = i;
         ind = ind + 1;
+        end
     end
 end
 
 % Get cropped image and resize
-for i = 1:length(path_00)
-    index = path_00(i);
+for i = 1:length(path_images)
+    index = path_images(i);
     orig_img=imread(wiki.full_path{index});
     cropped_face{i}=extractSubImage(orig_img,wiki.face_location{index});
     cropped_face_resized{i} = imresize(uint8(cropped_face{i}),[256 256]);
 end
 
-save('path_00.mat','path_00');
-save('cropped_face_00.mat','cropped_face_resized');
-
-%% Show a cropped image i = [0,600]
-% close all
-% i = 4;
-% index = path_00(i);
-% figure
-% imshow(wiki.full_path{index})
-% figure
-% imshow(uint8(cropped_face{i}))
-% 
-% % Resize Images
-% B = imresize(uint8(cropped_face{i}),[256 256]);
-% figure
-% imshow(B)
+save('path_0_2.mat','path_images');
+save('cropped_faces_0_2.mat','cropped_face_resized');

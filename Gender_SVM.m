@@ -2,16 +2,15 @@ close all
 clc
 clear all
 
-load('eigen_faces_00.mat');
+load('eigen_faces_0_2.mat');
 load('wiki.mat');
-load('path_00.mat');
+load('path_0_2.mat');
 %% Get labels for genders
 %  0 for female and 1 for male, NaN if unknown
-
-gender = NaN(length(path_00),1);
+gender = NaN(length(path_images),1);
 % Get metadata from the training set
-for i = 1:length(path_00)
-    index = path_00(i);
+for i = 1:length(path_images)
+    index = path_images(i);
     % Get the gender
     gender(i) = wiki.gender(index);
 end
@@ -59,7 +58,7 @@ end
 Mdl = fitcecoc(featureVector,labels_train);
 
 % save the generated model
-save('Mdl.mat','Mdl');
+save('Mdl_0_2.mat','Mdl');
 
 %% Pass in the testing data
 % take first remaining folds and classify the data

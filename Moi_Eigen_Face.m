@@ -1,13 +1,13 @@
 % Face recognition 
-%clear all
+clear all
 close all
 clc
 
 %% Load in the Images
 % load in cropped images
-load('cropped_face_00.mat');
-load('wiki.mat');
-load('path_00.mat');
+load('cropped_faces_0_2.mat');
+%load('wiki.mat');
+%load('path_images.mat');
 
 % number of images on your training set.
 M=length(cropped_face_resized);
@@ -157,7 +157,7 @@ for i=1:size(u,2)
 end
 
 %%
-save('eigen_faces_00.mat','eigen_faces');
+save('eigen_faces_0_2.mat','eigen_faces');
 
 %% Find the weight of each face in the training set.
 % omega = [];
