@@ -5,8 +5,7 @@ clear all
 
 % Copyright 2015 The MathWorks, Inc.
 addpath(genpath('Action'))
-name = 'king_arthur_2017';
-name = 'allegiant_2016';
+name = 'Baby_driver_2017';
 str=strcat(name,'.jpg');
 
 % Create a detector object.
@@ -22,10 +21,10 @@ bboxes = step(faceDetector, I);
 IFaces = insertObjectAnnotation(I, 'rectangle', bboxes, 'Face');
 figure, imshow(IFaces), title('Detected faces');
 
-
 %% Preconditioning for SVM
 % Crop faces and resize
-for i = 1:length(bboxes)
+[rows,cols] = size(bboxes);
+for i = 1:rows
     Movie_Faces{i} = I(bboxes(i,2):bboxes(i,2)+bboxes(i,4),bboxes(i,1):bboxes(i,1)+bboxes(i,3));
     % Has to be resized into the size of the faces used for training
     Movie_Faces{i} = imresize(Movie_Faces{i},[256 256]);
@@ -38,6 +37,7 @@ end
 eigen_faces_movie = Get_Eigen_Face(Movie_Faces);
 figure
 imshow(eigen_faces_movie(:,:,1))
+title('Eigen Face')
 
 %% Apply ML Model
 
