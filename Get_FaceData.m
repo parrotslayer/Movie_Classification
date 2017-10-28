@@ -27,7 +27,7 @@ for i = 1:length(path_images)
     index = path_images(i);
     orig_img=imread(wiki.full_path{index});
     cropped_face{i}=extractSubImage(orig_img,wiki.face_location{index});
-    cropped_face_resized{i} = imresize(uint8(cropped_face{i}),[256 256]);
+    cropped_face_resized{i} = imresize(uint8(cropped_face{i}),[64 64]);
     
     % save the cropped image as a numbered thing
     str=strcat(int2str(i),'_BW.jpg');
@@ -40,5 +40,5 @@ for i = 1:length(path_images)
     eval('imwrite(img,str)');   
 end
 
-save('path_0_2.mat','path_images');
-save('cropped_faces_0_2.mat','cropped_face_resized');
+%save('path_0_2.mat','path_images');
+save('cropped_faces_0_2_64.mat','cropped_face_resized');

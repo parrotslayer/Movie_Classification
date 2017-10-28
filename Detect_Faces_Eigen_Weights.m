@@ -50,4 +50,4 @@ label_pred = predict(Mdl,featureVector2);
 
 % Annotate detected faces.
 IFaces = insertObjectAnnotation(I, 'rectangle', bboxes, label_pred);
-figure, imshow(IFaces), title('Detected faces Omega');
+figure, imshow(IFaces), title('Using Eigen Faces F = 0, M = 1');
