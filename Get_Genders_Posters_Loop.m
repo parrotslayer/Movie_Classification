@@ -10,6 +10,17 @@ imds = imageDatastore(rootFolder,'IncludeSubfolders',true, 'LabelSource', 'folde
         
 % load the generated SVM Eigen Face Weight model
 load('Mdl_0_2_weights.mat')
+% load required variables for comuting eigen faces
+load('Eigen_Required_Variables.mat')
+global um;
+global ustd;
+global u;
+global irow;
+global icol;
+global temp;
+global m;
+global M;
+global omega;
 
 % If no faces will default to NaN
 Pred_Gender_CNN = NaN(length(imds.Files),2);

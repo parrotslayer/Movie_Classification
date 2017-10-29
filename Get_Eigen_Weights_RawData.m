@@ -2,9 +2,18 @@
 function [Weight_All,e_All] = Get_Eigen_Weights_RawData(All_Images)
 %% load the required variables
 load('Eigen_Required_Variables.mat')
+global um;
+global ustd;
+global u;
+global irow;
+global icol;
+global temp;
+global m;
+global M;
+global omega;
 
 %preallocation
-num_images = length(All_Images)
+num_images = length(All_Images);
 Weight_All = zeros(num_images,1194);
 e_All = zeros(num_images,1194);
 
