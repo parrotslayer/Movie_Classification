@@ -7,7 +7,12 @@ clc
 rootFolder = 'C:\Users\Bill\Documents\GITHUB\Movie_Classification\Database';
 % make IMDS
 imds = imageDatastore(rootFolder,'IncludeSubfolders',true, 'LabelSource', 'foldernames');
-        
+
+%% path for save fig
+addpath(genpath('altmany-export_fig-9ac0917'))
+
+% Load convnet
+load('convnet_100epoch.mat')
 % load the generated SVM Eigen Face Weight model
 load('Mdl_0_2_weights.mat')
 % load required variables for comuting eigen faces
@@ -30,8 +35,8 @@ Pred_Gender_Eigen = NaN(length(imds.Files),2);
 faceDetector = vision.CascadeObjectDetector;
 
 %length(imds.Files)
-for inc = 1:2
-    
+for inc = 1:length(imds.Files)
+    disp(inc)
     % Read input image.
     I = imread(imds.Files{inc});
     
@@ -39,6 +44,7 @@ for inc = 1:2
     I_BW = rgb2gray(I);
     
     % Detect faces.
+    clear bboxes
     bboxes = step(faceDetector, I);
     
     % Crop faces and resize
@@ -48,12 +54,41 @@ for inc = 1:2
     if rows > 0
         % Crop out the face detected
         for i = 1:rows
-            Movie_Faces_Eigen{i} = I_BW(bboxes(i,2):bboxes(i,2)+bboxes(i,4),bboxes(i,1):bboxes(i,1)+bboxes(i,3));
+            Movie_Faces{i} = I_BW(bboxes(i,2):bboxes(i,2)+bboxes(i,4),bboxes(i,1):bboxes(i,1)+bboxes(i,3));
             % Has to be resized into the size of the faces used for training
-            Movie_Faces_Eigen{i} = imresize(Movie_Faces_Eigen{i},[256 256]);
+            Movie_Faces_Eigen{i} = imresize(Movie_Faces{i},[256 256]);
+            Movie_Faces_CNN{i} = imresize(Movie_Faces{i},[64 64]);
+            % Save movie face
+            str = strcat('CNN_face_',int2str(i),'.jpg');
+            file_names{i} = str;
+            % image to write
+            imwrite(Movie_Faces_CNN{i},str);
         end
         
-        % Compute the eigen faces
+        %% Classify the Images in the Test Data and Compute Accuracy
+        %Store images into IMDS
+        labels = ones(rows,1)*inc;
+        FaceData = imageDatastore(file_names);
+        
+        % Run the trained network on the test set that was not used to train the
+        % network and predict the image labels (digits).
+        label_pred_cat = classify(convnet,FaceData);
+        
+        % Convert catagorical to cell
+        clear label_CNN
+        Males_CNN = 0;
+        Females_CNN = 0;
+        for i = 1:rows
+            if label_pred_cat(i) == categorical(0)
+                label_CNN{i} = 'Female';
+                Females_CNN = Females_CNN + 1;
+            else
+                label_CNN{i} = 'Male';
+                Males_CNN = Males_CNN + 1;
+            end
+        end
+        
+        %% Classify using Eigen Faces' Weights
         [Weight_All,e_All] = Get_Eigen_Weights_RawData(Movie_Faces_Eigen);
         
         % Apply ML Model Using Omega
@@ -61,7 +96,7 @@ for inc = 1:2
         
         % Pass features into predict. Returns vector with predicted
         label_pred = predict(Mdl,featureVector2);
-
+        
         %% Get number of Males and Females
         Males_Eigen = 0;
         Females_Eigen = 0;
@@ -69,42 +104,37 @@ for inc = 1:2
         for j = 1:rows
             if label_pred(j) == 1
                 Males_Eigen = Males_Eigen + 1;
-                label_show{j} = 'M';
+                label_show{j} = 'Male';
             else
                 Females_Eigen = Females_Eigen + 1;
-                label_show{j} = 'F';
-
+                label_show{j} = 'Female';               
             end
         end
         
-        % Annotate detected faces.
+        %% Annotate detected faces from Eigen.
         IFaces = insertObjectAnnotation(I, 'rectangle', bboxes, label_show);
         % Do not plot it
-        f = figure('visible','off'); 
+        f = figure('visible','off');
         imshow(IFaces)
         title('Gender Recognition Using Eigen Faces')
         
-        % Save the annotated poster
-        string(inc,:) = strcat(num2str(inc),'_Annotated_Eigen','.jpg');
-        saveas(gcf,string(inc,:));
-       
-        Pred_Gender_CNN(inc,:) = [Females_Eigen,Males_Eigen];
-        %Pred_Gender_Eigen = NaN(length(imds.Files,2));
+        % Save the annotated poster        
+        export_fig(sprintf('%d_Annotated_Eigen.jpg', inc),'-native') 
 
-        %extract faces
+        %% Annotate detected faces from CNN
+        IFaces = insertObjectAnnotation(I, 'rectangle', bboxes, label_CNN);
+        % Do not plot it
+        f = figure('visible','off');
+        imshow(IFaces)
+        title('Gender Recognition Using a CNN')
         
-        %convert to required format(s)
-        % so 64x64x3 for CNN
-        % 256x256 BW for eigen
+        % Save the annotated poster        
+        export_fig(sprintf('%d_Annotated_CNN.jpg', inc),'-native') 
         
-        %Store 64 into imds
-        
-        %run extract eigen face weights
-        %run SVM to get genders
-        
-        %run CNN onto the new faces
+        % Store predicted genders into arrays
+        Pred_Gender_CNN(inc,:) = [Females_Eigen,Males_Eigen];
+        Pred_Gender_Eigen(inc,:) = [Females_CNN,Males_CNN];
         
     end %end if boxxes > 0 loop
     
-    %store both into array
 end
