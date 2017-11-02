@@ -1,5 +1,5 @@
 % Face recognition 
-clear all
+%clear all
 close all
 clc
 
@@ -9,7 +9,7 @@ load('cropped_faces_0_2_64.mat');
 % number of images on your training set.
 M=length(cropped_face_resized);
 
-M = 200;
+M = 1194;
 
 %Chosen std and mean. 
 %It can be any number that it is close to the std and mean of most of the images.
@@ -173,8 +173,9 @@ end
 %InputImage = imread(strcat('D:\Documents and Settings\sis26\Desktop\',InputImage));
 
 addpath(genpath('Faces_0_2_Cropped_BW'));
-file_name = '25_BW.jpg';
+file_name = '1194_BW.jpg';
 InputImage = rgb2gray(cropped_face_resized{25});
+%InputImage = rgb2gray(sven_64);
 
 figure(5)
 %subplot(1,2,1)
@@ -200,7 +201,7 @@ ReshapedImage = ReshapedImage';
 %subplot(1,2,2)
 figure
 imagesc(ReshapedImage); colormap('gray');
-title('Reconstructed image','fontsize',18)
+title(['Reconstructed Image with ',num2str(M),' Faces'])
 
 InImWeight = [];
 for i=1:size(u,2)
@@ -212,8 +213,8 @@ end
 ll = 1:M;
 figure(68)
 subplot(1,2,1)
-stem(ll,InImWeight)
-title('Weight of Input Face','fontsize',14)
+stem(ll,InImWeight,'Marker','none')
+title('Weight of Input Face')
 
 % Find Euclidean distance
 e=[];
@@ -226,8 +227,8 @@ end
 
 kk = 1:size(e,2);
 subplot(1,2,2)
-stem(kk,e)
-title('Eucledian distance of input image','fontsize',14)
+stem(kk,e,'Marker','none')
+title('Eucledian distance of input image')
 
 MaximumValue=max(e)
 MinimumValue=min(e)

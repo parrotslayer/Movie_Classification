@@ -4,7 +4,7 @@ clc
 
 load('path_0_2.mat')
 load('wiki.mat')
-addpath(genpath('Faces_0_2_Cropped_BW'));
+%addpath(genpath('Faces_0_2_Cropped_BW'));
 
 gender = zeros(length(path_images),1);
 for i = 1:length(path_images)
