@@ -10,7 +10,7 @@ load('cropped_faces_0_2_64.mat');
 M=length(cropped_face_resized);
 
 M = 1194;
-
+M = 20;
 %Chosen std and mean. 
 %It can be any number that it is close to the std and mean of most of the images.
 um=100;
@@ -138,22 +138,19 @@ for i=1:size(u,2)
 end
 
 
-% show eigenfaces;
-% figure(4);
-% for i=1:size(u,2)
-%     img=reshape(u(:,i),icol,irow);
-%     img=img';
-%     img=histeq(img,255);
-%     subplot(ceil(sqrt(M)),ceil(sqrt(M)),i)
-%     imshow(img)
-%     drawnow;
-%     if i==3
-%         title('Eigenfaces','fontsize',18)
-%     end
-% end
+%% show eigenfaces;
+figure(4);
+for i=1:9
+    img=reshape(u(:,i),icol,irow);
+    img=img';
+    img=histeq(img,255);
+    subplot(ceil(sqrt(9)),ceil(sqrt(9)),i)
+    imshow(img)
+    drawnow;
+end
 
 
-% Find the weight of each face in the training set.
+%% Find the weight of each face in the training set.
 omega = [];
 for h=1:size(dbx,2)
     WW=[];    
