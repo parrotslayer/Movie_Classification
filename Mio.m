@@ -56,7 +56,8 @@ for i=1:M
     str=strcat(int2str(i),'.jpg');
     img=reshape(S(:,i),icol,irow);
     img=img';
-    eval('imwrite(img,str)');   
+    
+    %eval('imwrite(img,str)');   
     
     %subplot(ceil(sqrt(M)),ceil(sqrt(M)),i)
     %imshow(img)
