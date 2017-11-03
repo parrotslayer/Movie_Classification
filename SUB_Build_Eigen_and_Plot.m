@@ -165,6 +165,7 @@ for h=1:size(dbx,2)
     omega = [omega WW];
 end
 
+save('Eigen_Required_Variables.mat')
 
 %% Acquire new image
 % Note: the input image must have a bmp or jpg extension. 

@@ -35,7 +35,7 @@ Pred_Gender_Eigen = NaN(length(imds.Files),2);
 faceDetector = vision.CascadeObjectDetector;
 
 %length(imds.Files)
-for inc = 1:length(imds.Files)
+for inc = 1:1
     disp(inc)
     % Read input image.
     I = imread(imds.Files{inc});
@@ -56,7 +56,7 @@ for inc = 1:length(imds.Files)
         for i = 1:rows
             Movie_Faces{i} = I_BW(bboxes(i,2):bboxes(i,2)+bboxes(i,4),bboxes(i,1):bboxes(i,1)+bboxes(i,3));
             % Has to be resized into the size of the faces used for training
-            Movie_Faces_Eigen{i} = imresize(Movie_Faces{i},[256 256]);
+            Movie_Faces_Eigen{i} = imresize(Movie_Faces{i},[64 64]);
             Movie_Faces_CNN{i} = imresize(Movie_Faces{i},[64 64]);
             % Save movie face
             str = strcat('CNN_face_',int2str(i),'.jpg');
@@ -114,7 +114,7 @@ for inc = 1:length(imds.Files)
         %% Annotate detected faces from Eigen.
         IFaces = insertObjectAnnotation(I, 'rectangle', bboxes, label_show);
         % Do not plot it
-        f = figure('visible','off');
+        f = figure();
         imshow(IFaces)
         title('Gender Recognition Using Eigen Faces')
         
@@ -124,7 +124,7 @@ for inc = 1:length(imds.Files)
         %% Annotate detected faces from CNN
         IFaces = insertObjectAnnotation(I, 'rectangle', bboxes, label_CNN);
         % Do not plot it
-        f = figure('visible','off');
+        f = figure();
         imshow(IFaces)
         title('Gender Recognition Using a CNN')
         
